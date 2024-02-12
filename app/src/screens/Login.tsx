@@ -33,7 +33,6 @@ export const Login = () => {
     }
 
     if (data?.login) {
-      console.log('Data', data)
       dispatch(setLogin(data))
       navigation.reset({
         index: 0,

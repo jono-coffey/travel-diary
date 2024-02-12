@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { ApolloProvider } from '@apollo/client'
 import * as eva from '@eva-design/eva'
 import { NavigationContainer } from '@react-navigation/native'
 import { ApplicationProvider, IconRegistry, StyleService, useStyleSheet } from '@ui-kitten/components'
@@ -12,18 +12,13 @@ import Toast from 'react-native-toast-message'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import { API_BASE_URL } from './src/constants/api'
+import { getApolloClient } from './src/graphql/setup'
 import { RootStack } from './src/routing/RootStack'
 import { persistor, store } from './src/state/store'
 import { default as theme } from './src/styles/theme.json'
 import { toastConfig } from './src/utils/toasts'
 
 SplashScreen.preventAutoHideAsync()
-
-const client = new ApolloClient({
-  uri: API_BASE_URL,
-  cache: new InMemoryCache()
-})
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -54,8 +49,13 @@ export default function App() {
     return null
   }
 
+  const getToken = () => {
+    const state = store.getState()
+    return state.auth.accessToken || ''
+  }
+
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={getApolloClient(getToken())}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <IconRegistry icons={EvaIconsPack} />

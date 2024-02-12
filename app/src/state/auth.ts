@@ -1,7 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import { User } from '../models/users.model'
 import { LoginMutation, SignUpMutation } from '../__generated__/graphql'
+import { getApolloClient } from '../graphql/setup'
+import { User } from '../models/users.model'
 
 interface AuthSlice {
   accessToken: string
@@ -28,6 +29,7 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.user = {} as User
       state.accessToken = ''
+      getApolloClient('').resetStore()
     }
   }
 })
