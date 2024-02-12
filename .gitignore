@@ -1,0 +1,4 @@
+dev.db
+
+.env.development
+.env.production

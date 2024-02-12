@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Travel Diary",
+    "slug": "travel-diary",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*",
+      "**/fonts/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "usesAppleSignIn": true
+    },
+    "android": {
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "77adcc86-f4d7-4c2a-be77-af578dfbc029"
+      }
+    },
+    "owner": "jonocoffey"
+  }
+}
