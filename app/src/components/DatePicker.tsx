@@ -2,6 +2,7 @@ import { Modal, StyleService, useStyleSheet, useTheme } from '@ui-kitten/compone
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { useEffect, useState } from 'react'
+import { View, ViewStyle } from 'react-native'
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker'
 
 import { InputField } from './InputField'
@@ -14,6 +15,7 @@ interface DatePickerProps {
   required?: boolean
   placeholder?: string
   hintText?: string
+  style?: ViewStyle
   onChange(unix: number): void
 }
 
@@ -44,16 +46,18 @@ export const DatePicker = (props: DatePickerProps) => {
 
   return (
     <>
-      <InputField
-        displayValue={displayValue}
-        errorMessage={props.errorMessage}
-        required={props.required}
-        onTouch={() => onInputTouch()}
-        placeholder={props.placeholder}
-        hintText={props.hintText}
-        editable={false}
-        preventKeyboard
-      />
+      <View style={props.style}>
+        <InputField
+          displayValue={displayValue}
+          errorMessage={props.errorMessage}
+          required={props.required}
+          onTouch={() => onInputTouch()}
+          placeholder={props.placeholder}
+          hintText={props.hintText}
+          editable={false}
+          preventKeyboard
+        />
+      </View>
       <Modal
         animationType="slide"
         visible={visible}

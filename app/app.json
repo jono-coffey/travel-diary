@@ -4,16 +4,24 @@
     "slug": "travel-diary",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon.jpg",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logosmall.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*",
       "**/fonts/*"
+    ],
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Travel Diary to use your location."
+        }
+      ]
     ],
     "ios": {
       "supportsTablet": true,
@@ -22,7 +30,7 @@
     "android": {
       "versionCode": 2,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logosmall.png",
         "backgroundColor": "#ffffff"
       }
     },

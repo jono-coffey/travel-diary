@@ -2,9 +2,10 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useTheme } from '@ui-kitten/components'
 
-import { ADD_ENTRY, DASHBOARD, MainTabsParamList } from './routes'
-import { Dashboard } from '../screens/Dashboard'
+import { ADD_ENTRY, DASHBOARD, MAP, MainTabsParamList } from './routes'
 import { AddEntry } from '../screens/AddEntry/AddEntry'
+import { Dashboard } from '../screens/Dashboard'
+import { Map } from '../screens/MapView'
 
 const Tab = createBottomTabNavigator<MainTabsParamList>()
 
@@ -31,6 +32,7 @@ export const MainTabs = () => {
       })}
     >
       <Tab.Screen name={DASHBOARD} component={Dashboard} />
+      <Tab.Screen name={MAP} component={Map} />
       <Tab.Screen name={ADD_ENTRY} component={AddEntry} />
     </Tab.Navigator>
   )

@@ -1,7 +1,7 @@
 import { StyleService, useStyleSheet } from '@ui-kitten/components'
 import { Image } from 'react-native'
 
-import SmallLogo from '../../assets/logosmall.jpg'
+import SmallLogo from '../../assets/logosmall.png'
 
 export const Logo = () => {
   const styles = useStyleSheet(themedStyles)

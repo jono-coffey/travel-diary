@@ -11,7 +11,7 @@ import { Button, ButtonType } from '../../components/Button'
 import { DatePicker } from '../../components/DatePicker'
 import { InputField } from '../../components/InputField'
 import { CREATE_ENTRY_MUTATION } from '../../graphql/entries.graphql'
-import { ADD_ENTRY, HOME, LANDING, MainTabsParamList, RootStackParamList } from '../../routing/routes'
+import { HOME, LANDING, MainTabsParamList, RootStackParamList } from '../../routing/routes'
 import { logout } from '../../state/auth'
 import { useAppDispatch } from '../../state/store'
 import { ToastType, showToast } from '../../utils/toasts'
@@ -54,14 +54,6 @@ export const AddEntry = ({ route }: NativeStackScreenProps<MainTabsParamList, 'A
     setIsFormValid(Object.keys(errors).length === 0)
   }, [destination, startDate, endDate])
 
-  const onLogout = () => {
-    dispatch(logout())
-    navigation.reset({
-      index: 0,
-      routes: [{ name: LANDING }]
-    })
-  }
-
   const onCreateEntry = () => {
     if (startDate && endDate) {
       newEntry({ variables: { description, destination, startDate, endDate } }).catch(() => {})
@@ -80,20 +72,24 @@ export const AddEntry = ({ route }: NativeStackScreenProps<MainTabsParamList, 'A
           required
         />
         <InputField placeholder="Description" value={description} onChange={setDescription} />
-        <DatePicker
-          placeholder="Start Date"
-          hintText="dd/mm/yyyy"
-          required
-          onChange={(unixDate) => setStartDate(unixDate)}
-          errorMessage={validationErrors.startDate}
-        />
-        <DatePicker
-          placeholder="End Date"
-          hintText="dd/mm/yyyy"
-          required
-          onChange={(unixDate) => setEndDate(unixDate)}
-          errorMessage={validationErrors.endDate}
-        />
+        <View style={styles.dateContainer}>
+          <DatePicker
+            placeholder="Start Date"
+            hintText="dd/mm/yyyy"
+            required
+            style={styles.dateInput}
+            onChange={(unixDate) => setStartDate(unixDate)}
+            errorMessage={validationErrors.startDate}
+          />
+          <DatePicker
+            placeholder="End Date"
+            hintText="dd/mm/yyyy"
+            style={styles.dateInput}
+            required
+            onChange={(unixDate) => setEndDate(unixDate)}
+            errorMessage={validationErrors.endDate}
+          />
+        </View>
         <Button
           type={ButtonType.PRIMARY}
           onButtonClick={() => onCreateEntry()}
@@ -102,7 +98,6 @@ export const AddEntry = ({ route }: NativeStackScreenProps<MainTabsParamList, 'A
           isLoading={loading}
         />
       </View>
-      <Button type={ButtonType.PRIMARY} onButtonClick={() => onLogout()} title="Logout" />
     </Background>
   )
 }
@@ -114,5 +109,12 @@ const themedStyles = StyleService.create({
     display: 'flex',
     justifyContent: 'space-between',
     gap: 16
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  dateInput: {
+    width: '49%'
   }
 })
