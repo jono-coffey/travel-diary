@@ -1,11 +1,13 @@
 import { useFocusEffect } from '@react-navigation/native'
-import { Spinner, StyleService, Text, useStyleSheet } from '@ui-kitten/components'
+import { Modal, Spinner, StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import * as Location from 'expo-location'
 import { useCallback, useState } from 'react'
 import { View } from 'react-native'
 import MapView, { LatLng, LongPressEvent, Marker, Region } from 'react-native-maps'
 
+import { NewEntryForm } from '../components/Forms/NewEntryForm/NewEntryForm'
 import { NewEntryMarker } from '../components/Maps/NewEntryMarker'
+import { ToastType, showToast } from '../utils/toasts'
 
 export type MapMarkerType = {
   latitude: number
@@ -19,6 +21,7 @@ export const Map = () => {
   const [newMarker, setNewMarker] = useState<MapMarkerType | undefined>(undefined)
   const [initialRegion, setInitialRegion] = useState<Region | undefined>(undefined)
   const [isLoadingLocation, setIsLoadingLocation] = useState(false)
+  const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false)
 
   const styles = useStyleSheet(themedStyles)
 
@@ -68,10 +71,29 @@ export const Map = () => {
     setNewMarker(latLng)
   }
 
-  const onAddEntryClick = () => {}
+  const onAddEntryError = () => {
+    const errorText = 'Something went wrong creating a new journal entry'
+    showToast({ text2: errorText }, ToastType.ERROR, 2)
+  }
+
+  const onAddEntrySuccess = () => {
+    showToast({ text2: 'New journal entry has been created' }, ToastType.SUCCESS, 2)
+    setIsAddEntryModalOpen(false)
+  }
 
   return (
     <>
+      <Modal
+        animationType="slide"
+        visible={isAddEntryModalOpen}
+        onBackdropPress={() => {
+          setIsAddEntryModalOpen(false)
+        }}
+        style={styles.modalContainer}
+        hardwareAccelerated
+      >
+        <NewEntryForm onError={() => onAddEntryError()} onSuccess={() => onAddEntrySuccess()} />
+      </Modal>
       {isLoadingLocation && (
         <View style={styles.loaderWrapper}>
           <Spinner status="primary" />
@@ -90,7 +112,7 @@ export const Map = () => {
       >
         {newMarker && (
           <NewEntryMarker
-            onAddClick={() => onAddEntryClick()}
+            onAddClick={() => setIsAddEntryModalOpen(true)}
             onDrag={(latLng) => onNewMarkerDrag(latLng)}
             marker={newMarker}
           />
@@ -125,5 +147,17 @@ const themedStyles = StyleService.create({
   loaderText: {
     color: 'white',
     marginTop: 10
+  },
+  modalContainer: {
+    backgroundColor: 'color-basic-100',
+    padding: 20,
+
+    borderRadius: 20,
+    width: '95%',
+    shadowColor: '#000000',
+    borderColor: 'color-basic-100',
+    elevation: 1,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.11
   }
 })

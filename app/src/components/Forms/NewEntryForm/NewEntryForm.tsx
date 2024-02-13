@@ -1,24 +1,20 @@
 import { useMutation } from '@apollo/client'
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
 import { AddEntryErrors, validateForm } from './validation'
 import { CREATE_ENTRY_MUTATION } from '../../../graphql/mutations/entries.graphql'
-import { CREATE_TRIP_MUTATION } from '../../../graphql/mutations/trips.graphql'
-import { HOME, MainTabsParamList, RootStackParamList } from '../../../routing/routes'
-import { ToastType, showToast } from '../../../utils/toasts'
-import { Background } from '../../Background'
 import { Button, ButtonType } from '../../Buttons/Button'
-import { DatePicker } from '../../Inputs/DatePicker'
 import { InputField } from '../../Inputs/InputField'
 
-export const NewEntryForm = () => {
-  const styles = useStyleSheet(themedStyles)
+export type NewEntryFormProps = {
+  onSuccess(): void
+  onError(): void
+}
 
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+export const NewEntryForm = (props: NewEntryFormProps) => {
+  const styles = useStyleSheet(themedStyles)
 
   const [destination, setDestination] = useState('')
   const [description, setDescription] = useState('')
@@ -30,13 +26,12 @@ export const NewEntryForm = () => {
 
   useEffect(() => {
     if (error) {
-      const errorText = 'Something went wrong creating a new journal entry'
-      showToast({ text2: errorText }, ToastType.ERROR, 2)
+      props.onError()
       return
     }
 
     if (data?.newEntry) {
-      showToast({ text2: 'New journal entry has been created' }, ToastType.ERROR, 2)
+      props.onSuccess()
     }
   }, [data, error])
 
@@ -52,7 +47,7 @@ export const NewEntryForm = () => {
   }
 
   return (
-    <Background style={{ paddingBottom: 0 }}>
+    <>
       <Text category="h3">New Journal Entry</Text>
       <View style={styles.inputContainer}>
         <InputField
@@ -71,7 +66,7 @@ export const NewEntryForm = () => {
           isLoading={loading}
         />
       </View>
-    </Background>
+    </>
   )
 }
 
@@ -82,12 +77,5 @@ const themedStyles = StyleService.create({
     display: 'flex',
     justifyContent: 'space-between',
     gap: 16
-  },
-  dateContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  dateInput: {
-    width: '49%'
   }
 })

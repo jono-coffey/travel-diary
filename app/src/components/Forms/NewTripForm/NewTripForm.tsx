@@ -1,23 +1,22 @@
 import { useMutation } from '@apollo/client'
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
 import { AddTripErrors, validateForm } from './validation'
-import { Background } from '../../components/Background'
-import { Button, ButtonType } from '../../components/Buttons/Button'
-import { DatePicker } from '../../components/Inputs/DatePicker'
-import { InputField } from '../../components/Inputs/InputField'
-import { CREATE_TRIP_MUTATION } from '../../graphql/mutations/trips.graphql'
-import { HOME, MainTabsParamList, RootStackParamList } from '../../routing/routes'
-import { ToastType, showToast } from '../../utils/toasts'
+import { CREATE_TRIP_MUTATION } from '../../../graphql/mutations/trips.graphql'
+import { Background } from '../../Background'
+import { Button, ButtonType } from '../../Buttons/Button'
+import { DatePicker } from '../../Inputs/DatePicker'
+import { InputField } from '../../Inputs/InputField'
 
-export const AddTrip = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Add Trip'>) => {
+export type NewTripFormProps = {
+  onSuccess(): void
+  onError(): void
+}
+
+export const NewTripForm = (props: NewTripFormProps) => {
   const styles = useStyleSheet(themedStyles)
-
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
   const [name, setName] = useState('')
   const [startDate, setStartDate] = useState<number | undefined>(undefined)
@@ -30,18 +29,12 @@ export const AddTrip = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Ad
 
   useEffect(() => {
     if (error) {
-      const errorText = 'Something went wrong creating a new journal entry'
-      showToast({ text2: errorText }, ToastType.ERROR, 2)
+      props.onError()
       return
     }
 
     if (data?.newTrip) {
-      showToast({ text2: 'Your trip has been created' }, ToastType.SUCCESS, 2)
-
-      navigation.reset({
-        index: 0,
-        routes: [{ name: HOME }]
-      })
+      props.onSuccess()
     }
   }, [data, error])
 

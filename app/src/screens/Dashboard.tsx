@@ -21,7 +21,8 @@ export const Dashboard = ({ route }: NativeStackScreenProps<MainTabsParamList, '
   }
   return (
     <Background style={{ paddingBottom: 0 }}>
-      <Text>Hello</Text>
+      <Text category="h3">Dashboard</Text>
+
       <Button type={ButtonType.PRIMARY} onButtonClick={() => onLogout()} title="Logout" />
     </Background>
   )
