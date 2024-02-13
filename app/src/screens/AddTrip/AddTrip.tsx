@@ -5,42 +5,39 @@ import { StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
-import { AddEntryErrors, validateForm } from './validation'
+import { AddTripErrors, validateForm } from './validation'
 import { Background } from '../../components/Background'
-import { Button, ButtonType } from '../../components/Button'
-import { DatePicker } from '../../components/DatePicker'
-import { InputField } from '../../components/InputField'
-import { CREATE_ENTRY_MUTATION } from '../../graphql/entries.graphql'
-import { HOME, LANDING, MainTabsParamList, RootStackParamList } from '../../routing/routes'
-import { logout } from '../../state/auth'
-import { useAppDispatch } from '../../state/store'
+import { Button, ButtonType } from '../../components/Buttons/Button'
+import { DatePicker } from '../../components/Inputs/DatePicker'
+import { InputField } from '../../components/Inputs/InputField'
+import { CREATE_TRIP_MUTATION } from '../../graphql/mutations/trips.graphql'
+import { HOME, MainTabsParamList, RootStackParamList } from '../../routing/routes'
 import { ToastType, showToast } from '../../utils/toasts'
 
-export const AddEntry = ({ route }: NativeStackScreenProps<MainTabsParamList, 'AddEntry'>) => {
-  const dispatch = useAppDispatch()
+export const AddTrip = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Add Trip'>) => {
   const styles = useStyleSheet(themedStyles)
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
-  const [destination, setDestination] = useState('')
-  const [description, setDescription] = useState('')
+  const [name, setName] = useState('')
   const [startDate, setStartDate] = useState<number | undefined>(undefined)
   const [endDate, setEndDate] = useState<number | undefined>(undefined)
 
-  const [validationErrors, setValidationErrors] = useState<AddEntryErrors>({})
+  const [validationErrors, setValidationErrors] = useState<AddTripErrors>({})
   const [isFormValid, setIsFormValid] = useState(false)
 
-  const [newEntry, { data, loading, error }] = useMutation(CREATE_ENTRY_MUTATION)
+  const [newTrip, { data, loading, error }] = useMutation(CREATE_TRIP_MUTATION)
 
   useEffect(() => {
     if (error) {
       const errorText = 'Something went wrong creating a new journal entry'
-      console.log(error)
       showToast({ text2: errorText }, ToastType.ERROR, 2)
       return
     }
 
-    if (data?.newEntry) {
+    if (data?.newTrip) {
+      showToast({ text2: 'Your trip has been created' }, ToastType.SUCCESS, 2)
+
       navigation.reset({
         index: 0,
         routes: [{ name: HOME }]
@@ -49,29 +46,28 @@ export const AddEntry = ({ route }: NativeStackScreenProps<MainTabsParamList, 'A
   }, [data, error])
 
   useEffect(() => {
-    const errors = validateForm(destination, startDate, endDate)
+    const errors = validateForm(name, startDate, endDate)
     setValidationErrors(errors)
     setIsFormValid(Object.keys(errors).length === 0)
-  }, [destination, startDate, endDate])
+  }, [name, startDate, endDate])
 
   const onCreateEntry = () => {
     if (startDate && endDate) {
-      newEntry({ variables: { description, destination, startDate, endDate } }).catch(() => {})
+      newTrip({ variables: { name, startDate, endDate } }).catch(() => {})
     }
   }
 
   return (
     <Background style={{ paddingBottom: 0 }}>
-      <Text category="h3">New Journal Entry</Text>
+      <Text category="h3">New Trip</Text>
       <View style={styles.inputContainer}>
         <InputField
-          placeholder="Destination"
-          value={destination}
-          onChange={setDestination}
-          errorMessage={validationErrors.destination}
+          placeholder="Name"
+          value={name}
+          onChange={setName}
+          errorMessage={validationErrors.name}
           required
         />
-        <InputField placeholder="Description" value={description} onChange={setDescription} />
         <View style={styles.dateContainer}>
           <DatePicker
             placeholder="Start Date"

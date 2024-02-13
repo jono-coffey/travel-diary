@@ -1,4 +1,4 @@
-import { gql } from '../../src/__generated__/gql'
+import { gql } from '../../__generated__/gql'
 
 export const LOGIN_MUTATION = gql(`
   mutation Login($email: String!, $password: String!) {

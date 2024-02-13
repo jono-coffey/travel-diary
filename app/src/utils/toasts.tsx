@@ -2,8 +2,22 @@ import { StyleService, useStyleSheet } from '@ui-kitten/components'
 import Toast, { ErrorToast, BaseToastProps } from 'react-native-toast-message'
 
 export const toastConfig = {
-  // TODO: Add success toast when needed
+  success: (props: BaseToastProps) => <Success props={props} />,
   error: (props: BaseToastProps) => <Error props={props} />
+}
+
+const Success = ({ props }: any) => {
+  const styles = useStyleSheet(themedStyles)
+  return (
+    <ErrorToast
+      {...props}
+      style={styles.successContainer}
+      contentContainerStyle={styles.innerContainer}
+      text1Style={styles.text1Style}
+      text2Style={styles.text2Style}
+      text2NumberOfLines={props.props.numberOfLines}
+    />
+  )
 }
 
 const Error = ({ props }: any) => {
@@ -21,6 +35,10 @@ const Error = ({ props }: any) => {
 }
 
 const themedStyles = StyleService.create({
+  successContainer: {
+    borderLeftColor: 'color-success-500',
+    width: '80%'
+  },
   errorContainer: {
     borderLeftColor: 'color-danger-500',
     width: '80%'

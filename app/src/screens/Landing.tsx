@@ -6,7 +6,7 @@ import { View } from 'react-native'
 import { useSelector } from 'react-redux'
 
 import { Background } from '../components/Background'
-import { Button, ButtonType } from '../components/Button'
+import { Button, ButtonType } from '../components/Buttons/Button'
 import { Logo } from '../components/Logo'
 import { HOME, LOGIN, REGISTER, RootStackParamList } from '../routing/routes'
 import { RootState } from '../state/store'

@@ -1,7 +1,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: 'https://4f5a-217-138-165-99.ngrok-free.app',
+  schema: 'https://eedd-82-18-12-250.ngrok-free.app',
   documents: ['src/**/*.{ts,tsx}'],
   generates: {
     './src/__generated__/': {

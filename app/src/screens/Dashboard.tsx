@@ -3,7 +3,7 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { StyleService, Text } from '@ui-kitten/components'
 
 import { Background } from '../components/Background'
-import { Button, ButtonType } from '../components/Button'
+import { Button, ButtonType } from '../components/Buttons/Button'
 import { LANDING, MainTabsParamList, RootStackParamList } from '../routing/routes'
 import { logout } from '../state/auth'
 import { useAppDispatch } from '../state/store'

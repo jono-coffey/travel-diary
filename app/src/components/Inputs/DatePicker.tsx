@@ -6,7 +6,7 @@ import { View, ViewStyle } from 'react-native'
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker'
 
 import { InputField } from './InputField'
-import { fontFamily } from '../styles/typography'
+import { fontFamily } from '../../styles/typography'
 dayjs.extend(utc)
 
 interface DatePickerProps {

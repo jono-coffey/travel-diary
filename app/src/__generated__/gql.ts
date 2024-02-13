@@ -15,7 +15,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  mutation Login($email: String!, $password: String!) {\n    login(email: $email, password: $password) {\n      token\n      user {\n        id\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  mutation SignUp($email: String!, $password: String!) {\n    signUp(email: $email, password: $password) {\n      token\n      user {\n        id\n      }\n    }\n  }\n": types.SignUpDocument,
-    "\n  mutation NewEntry($description: String, $destination: String!, $startDate: Float!,  $endDate: Float!){\n    newEntry(description: $description, destination: $destination, startDate: $startDate, endDate: $endDate) {\n        id\n      }\n    }\n": types.NewEntryDocument,
+    "\n  mutation NewEntry($description: String, $destination: String!, $tripId: Int){\n    newEntry(description: $description, destination: $destination, tripId: $tripId) {\n        id\n      }\n    }\n": types.NewEntryDocument,
+    "\n  mutation NewTrip($name: String!, $startDate: Float!, $endDate: Float!){\n     newTrip(name: $name, startDate: $startDate, endDate: $endDate)  {\n        id\n        name\n        startDate\n        endDate\n      }\n    }\n": types.NewTripDocument,
 };
 
 /**
@@ -43,7 +44,11 @@ export function gql(source: "\n  mutation SignUp($email: String!, $password: Str
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation NewEntry($description: String, $destination: String!, $startDate: Float!,  $endDate: Float!){\n    newEntry(description: $description, destination: $destination, startDate: $startDate, endDate: $endDate) {\n        id\n      }\n    }\n"): (typeof documents)["\n  mutation NewEntry($description: String, $destination: String!, $startDate: Float!,  $endDate: Float!){\n    newEntry(description: $description, destination: $destination, startDate: $startDate, endDate: $endDate) {\n        id\n      }\n    }\n"];
+export function gql(source: "\n  mutation NewEntry($description: String, $destination: String!, $tripId: Int){\n    newEntry(description: $description, destination: $destination, tripId: $tripId) {\n        id\n      }\n    }\n"): (typeof documents)["\n  mutation NewEntry($description: String, $destination: String!, $tripId: Int){\n    newEntry(description: $description, destination: $destination, tripId: $tripId) {\n        id\n      }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation NewTrip($name: String!, $startDate: Float!, $endDate: Float!){\n     newTrip(name: $name, startDate: $startDate, endDate: $endDate)  {\n        id\n        name\n        startDate\n        endDate\n      }\n    }\n"): (typeof documents)["\n  mutation NewTrip($name: String!, $startDate: Float!, $endDate: Float!){\n     newTrip(name: $name, startDate: $startDate, endDate: $endDate)  {\n        id\n        name\n        startDate\n        endDate\n      }\n    }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

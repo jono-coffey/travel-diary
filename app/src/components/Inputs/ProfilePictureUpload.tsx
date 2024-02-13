@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
 import { Image, Pressable, View } from 'react-native'
 
-import { ToastType, showToast } from '../utils/toasts'
+import { ToastType, showToast } from '../../utils/toasts'
 
 interface ProfilePictureUploadProps {
   base64?: string

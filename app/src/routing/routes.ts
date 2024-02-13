@@ -5,7 +5,7 @@ export const HOME = 'Home'
 
 export const DASHBOARD = 'Dashboard'
 export const MAP = 'Map'
-export const ADD_ENTRY = 'AddEntry'
+export const ADD_TRIP = 'Add Trip'
 
 export type RootStackParamList = {
   [LANDING]: undefined
@@ -17,5 +17,5 @@ export type RootStackParamList = {
 export type MainTabsParamList = {
   [DASHBOARD]: undefined
   [MAP]: undefined
-  [ADD_ENTRY]: undefined
+  [ADD_TRIP]: undefined
 }

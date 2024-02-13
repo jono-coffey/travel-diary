@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { View } from 'react-native'
 import DropDownPicker, { DropDownDirectionType, ItemType, ValueType } from 'react-native-dropdown-picker'
 
-import { fontFamily } from '../styles/typography'
+import { fontFamily } from '../../styles/typography'
 
 export interface DropdownItem {
   value: string

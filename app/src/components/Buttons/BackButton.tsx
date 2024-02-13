@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components'
 import { Pressable } from 'react-native'
 
-import { RootStackParamList } from '../routing/routes'
+import { RootStackParamList } from '../../routing/routes'
 
 export const BackIcon = () => {
   const theme = useTheme()

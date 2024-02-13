@@ -1,6 +1,5 @@
 import {
   extendType,
-  floatArg,
   intArg,
   nonNull,
   nullable,
@@ -14,14 +13,20 @@ export const Entry = objectType({
     t.nonNull.int('id');
     t.nullable.string('description');
     t.nonNull.string('destination');
-    t.nonNull.float('startDate');
-    t.nonNull.float('endDate');
     t.field('createdBy', {
       type: 'User',
       resolve(parent, args, context) {
         return context.prisma.entry
           .findUnique({ where: { id: parent.id } })
           .createdBy();
+      },
+    });
+    t.nullable.field('trip', {
+      type: 'Trip',
+      resolve(parent, args, context) {
+        return context.prisma.entry
+          .findUnique({ where: { id: parent.id } })
+          .trip();
       },
     });
   },
@@ -39,32 +44,8 @@ export const EntriesQuery = extendType({
           throw new Error('User not logged in');
         }
 
-        return context.prisma.entry.findMany();
-      },
-    });
-  },
-});
-
-export const EntryQuery = extendType({
-  type: 'Query',
-  definition(t) {
-    t.nullable.field('getEntry', {
-      type: 'Entry',
-      args: {
-        id: nonNull(intArg()),
-      },
-      resolve(parent, args, context, info) {
-        const { id } = args;
-        const { userId } = context;
-
-        if (!userId) {
-          throw new Error('User not logged in');
-        }
-
-        return context.prisma.entry.findUnique({
-          where: {
-            id: id,
-          },
+        return context.prisma.entry.findMany({
+          where: { createdById: userId },
         });
       },
     });
@@ -79,24 +60,28 @@ export const EntryCreateMutation = extendType({
       args: {
         description: nullable(stringArg()),
         destination: nonNull(stringArg()),
-        startDate: nonNull(floatArg()),
-        endDate: nonNull(floatArg()),
+        tripId: nullable(intArg()),
       },
       resolve(parent, args, context) {
-        const { description, destination, startDate, endDate } = args;
+        const { description, destination, tripId } = args;
         const { userId } = context;
 
         if (!userId) {
           throw new Error('User not logged in');
         }
 
-        const entry = {
+        let entry = {
           description: description || null,
           destination,
-          startDate,
-          endDate,
           createdBy: { connect: { id: userId } },
         };
+
+        if (tripId) {
+          entry = {
+            ...entry,
+            trip: { connect: { id: tripId } },
+          };
+        }
 
         return context.prisma.entry.create({ data: entry });
       },
@@ -113,11 +98,10 @@ export const EntryUpdateMutation = extendType({
         id: nonNull(intArg()),
         description: nullable(stringArg()),
         destination: nullable(stringArg()),
-        startDate: nullable(floatArg()),
-        endDate: nullable(floatArg()),
+        tripId: nullable(intArg()),
       },
       resolve(parent, args, context) {
-        const { id, description, destination, startDate, endDate } = args;
+        const { id, description, destination, tripId } = args;
         const { userId } = context;
 
         if (!userId) {
@@ -139,17 +123,10 @@ export const EntryUpdateMutation = extendType({
           };
         }
 
-        if (startDate) {
+        if (tripId) {
           updatedEntry = {
             ...updatedEntry,
-            startDate,
-          };
-        }
-
-        if (endDate) {
-          updatedEntry = {
-            ...updatedEntry,
-            endDate,
+            trip: { connect: { id: tripId } },
           };
         }
 

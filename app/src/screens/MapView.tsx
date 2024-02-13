@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react'
 import { View } from 'react-native'
 import MapView, { LatLng, LongPressEvent, Marker, Region } from 'react-native-maps'
 
-import { NewEntryMarker } from '../components/NewEntryMarker'
+import { NewEntryMarker } from '../components/Maps/NewEntryMarker'
 
 export type MapMarkerType = {
   latitude: number

@@ -35,12 +35,16 @@ export interface NexusGenObjects {
   Entry: { // root type
     description?: string | null; // String
     destination: string; // String!
-    endDate: number; // Float!
     id: number; // Int!
-    startDate: number; // Float!
   }
   Mutation: {};
   Query: {};
+  Trip: { // root type
+    endDate: number; // Float!
+    id: number; // Int!
+    name: string; // String!
+    startDate: number; // Float!
+  }
   User: { // root type
     email: string; // String!
     id: number; // Int!
@@ -66,26 +70,34 @@ export interface NexusGenFieldTypes {
     createdBy: NexusGenRootTypes['User'] | null; // User
     description: string | null; // String
     destination: string; // String!
-    endDate: number; // Float!
     id: number; // Int!
-    startDate: number; // Float!
+    trip: NexusGenRootTypes['Trip'] | null; // Trip
   }
   Mutation: { // field return type
     deleteEntry: NexusGenRootTypes['Entry'] | null; // Entry
     login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     newEntry: NexusGenRootTypes['Entry']; // Entry!
+    newTrip: NexusGenRootTypes['Trip']; // Trip!
     signUp: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     updateEntry: NexusGenRootTypes['Entry'] | null; // Entry
   }
   Query: { // field return type
     currentUser: NexusGenRootTypes['User'] | null; // User
     entries: NexusGenRootTypes['Entry'][]; // [Entry!]!
-    getEntry: NexusGenRootTypes['Entry'] | null; // Entry
+  }
+  Trip: { // field return type
+    createdBy: NexusGenRootTypes['User'] | null; // User
+    endDate: number; // Float!
+    entries: NexusGenRootTypes['Entry'][]; // [Entry!]!
+    id: number; // Int!
+    name: string; // String!
+    startDate: number; // Float!
   }
   User: { // field return type
     email: string; // String!
     entries: NexusGenRootTypes['Entry'][]; // [Entry!]!
     id: number; // Int!
+    trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
   }
 }
 
@@ -98,26 +110,34 @@ export interface NexusGenFieldTypeNames {
     createdBy: 'User'
     description: 'String'
     destination: 'String'
-    endDate: 'Float'
     id: 'Int'
-    startDate: 'Float'
+    trip: 'Trip'
   }
   Mutation: { // field return type name
     deleteEntry: 'Entry'
     login: 'AuthPayload'
     newEntry: 'Entry'
+    newTrip: 'Trip'
     signUp: 'AuthPayload'
     updateEntry: 'Entry'
   }
   Query: { // field return type name
     currentUser: 'User'
     entries: 'Entry'
-    getEntry: 'Entry'
+  }
+  Trip: { // field return type name
+    createdBy: 'User'
+    endDate: 'Float'
+    entries: 'Entry'
+    id: 'Int'
+    name: 'String'
+    startDate: 'Float'
   }
   User: { // field return type name
     email: 'String'
     entries: 'Entry'
     id: 'Int'
+    trips: 'Trip'
   }
 }
 
@@ -133,7 +153,11 @@ export interface NexusGenArgTypes {
     newEntry: { // args
       description?: string | null; // String
       destination: string; // String!
+      tripId?: number | null; // Int
+    }
+    newTrip: { // args
       endDate: number; // Float!
+      name: string; // String!
       startDate: number; // Float!
     }
     signUp: { // args
@@ -143,14 +167,8 @@ export interface NexusGenArgTypes {
     updateEntry: { // args
       description?: string | null; // String
       destination?: string | null; // String
-      endDate?: number | null; // Float
       id: number; // Int!
-      startDate?: number | null; // Float
-    }
-  }
-  Query: {
-    getEntry: { // args
-      id: number; // Int!
+      tripId?: number | null; // Int
     }
   }
 }

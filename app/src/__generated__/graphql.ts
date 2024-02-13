@@ -27,9 +27,8 @@ export type Entry = {
   createdBy?: Maybe<User>;
   description?: Maybe<Scalars['String']['output']>;
   destination: Scalars['String']['output'];
-  endDate: Scalars['Float']['output'];
   id: Scalars['Int']['output'];
-  startDate: Scalars['Float']['output'];
+  trip?: Maybe<Trip>;
 };
 
 export type Mutation = {
@@ -37,6 +36,7 @@ export type Mutation = {
   deleteEntry?: Maybe<Entry>;
   login: AuthPayload;
   newEntry: Entry;
+  newTrip: Trip;
   signUp: AuthPayload;
   updateEntry?: Maybe<Entry>;
 };
@@ -56,7 +56,13 @@ export type MutationLoginArgs = {
 export type MutationNewEntryArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   destination: Scalars['String']['input'];
+  tripId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationNewTripArgs = {
   endDate: Scalars['Float']['input'];
+  name: Scalars['String']['input'];
   startDate: Scalars['Float']['input'];
 };
 
@@ -70,21 +76,24 @@ export type MutationSignUpArgs = {
 export type MutationUpdateEntryArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   destination?: InputMaybe<Scalars['String']['input']>;
-  endDate?: InputMaybe<Scalars['Float']['input']>;
   id: Scalars['Int']['input'];
-  startDate?: InputMaybe<Scalars['Float']['input']>;
+  tripId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   currentUser?: Maybe<User>;
   entries: Array<Entry>;
-  getEntry?: Maybe<Entry>;
 };
 
-
-export type QueryGetEntryArgs = {
-  id: Scalars['Int']['input'];
+export type Trip = {
+  __typename?: 'Trip';
+  createdBy?: Maybe<User>;
+  endDate: Scalars['Float']['output'];
+  entries: Array<Entry>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  startDate: Scalars['Float']['output'];
 };
 
 export type User = {
@@ -92,6 +101,7 @@ export type User = {
   email: Scalars['String']['output'];
   entries: Array<Entry>;
   id: Scalars['Int']['output'];
+  trips: Array<Trip>;
 };
 
 export type LoginMutationVariables = Exact<{
@@ -113,14 +123,23 @@ export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: '
 export type NewEntryMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']['input']>;
   destination: Scalars['String']['input'];
-  startDate: Scalars['Float']['input'];
-  endDate: Scalars['Float']['input'];
+  tripId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
 export type NewEntryMutation = { __typename?: 'Mutation', newEntry: { __typename?: 'Entry', id: number } };
 
+export type NewTripMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  startDate: Scalars['Float']['input'];
+  endDate: Scalars['Float']['input'];
+}>;
+
+
+export type NewTripMutation = { __typename?: 'Mutation', newTrip: { __typename?: 'Trip', id: number, name: string, startDate: number, endDate: number } };
+
 
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const SignUpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignUp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUp"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<SignUpMutation, SignUpMutationVariables>;
-export const NewEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"NewEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"destination"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"newEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}},{"kind":"Argument","name":{"kind":"Name","value":"destination"},"value":{"kind":"Variable","name":{"kind":"Name","value":"destination"}}},{"kind":"Argument","name":{"kind":"Name","value":"startDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}}},{"kind":"Argument","name":{"kind":"Name","value":"endDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<NewEntryMutation, NewEntryMutationVariables>;
+export const NewEntryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"NewEntry"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"description"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"destination"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"newEntry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"description"},"value":{"kind":"Variable","name":{"kind":"Name","value":"description"}}},{"kind":"Argument","name":{"kind":"Name","value":"destination"},"value":{"kind":"Variable","name":{"kind":"Name","value":"destination"}}},{"kind":"Argument","name":{"kind":"Name","value":"tripId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<NewEntryMutation, NewEntryMutationVariables>;
+export const NewTripDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"NewTrip"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"newTrip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"startDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"startDate"}}},{"kind":"Argument","name":{"kind":"Name","value":"endDate"},"value":{"kind":"Variable","name":{"kind":"Name","value":"endDate"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}}]}}]}}]} as unknown as DocumentNode<NewTripMutation, NewTripMutationVariables>;

@@ -1,15 +1,15 @@
-export interface AddEntryErrors {
-  destination?: string
+export interface AddTripErrors {
+  name?: string
   startDate?: string
   endDate?: string
 }
 
-export const validateForm = (destination?: string, startDate?: number, endDate?: number) => {
-  const errors: AddEntryErrors = {}
+export const validateForm = (name?: string, startDate?: number, endDate?: number) => {
+  const errors: AddTripErrors = {}
 
   // Validate email field
-  if (!destination) {
-    errors.destination = 'Email is required.'
+  if (!name) {
+    errors.name = 'Trip name is required.'
   }
 
   // Validate password field
