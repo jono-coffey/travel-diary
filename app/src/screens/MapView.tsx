@@ -3,9 +3,11 @@ import { Spinner, StyleService, Text, useStyleSheet } from '@ui-kitten/component
 import * as Location from 'expo-location'
 import { useCallback, useState } from 'react'
 import { View } from 'react-native'
-import MapView, { LongPressEvent, Marker, Region } from 'react-native-maps'
+import MapView, { LatLng, LongPressEvent, Marker, Region } from 'react-native-maps'
 
-type MapMarker = {
+import { NewEntryMarker } from '../components/NewEntryMarker'
+
+export type MapMarkerType = {
   latitude: number
   longitude: number
   title?: string
@@ -13,7 +15,8 @@ type MapMarker = {
 }
 
 export const Map = () => {
-  const [markers, setMarkers] = useState<MapMarker[]>([])
+  const [markers, setMarkers] = useState<MapMarkerType[]>([])
+  const [newMarker, setNewMarker] = useState<MapMarkerType | undefined>(undefined)
   const [initialRegion, setInitialRegion] = useState<Region | undefined>(undefined)
   const [isLoadingLocation, setIsLoadingLocation] = useState(false)
 
@@ -21,6 +24,7 @@ export const Map = () => {
 
   useFocusEffect(
     useCallback(() => {
+      setNewMarker(undefined)
       if (!initialRegion) {
         getInitialState()
       }
@@ -54,14 +58,17 @@ export const Map = () => {
   }
 
   const onLongPress = (event: LongPressEvent) => {
-    setMarkers([
-      ...markers,
-      {
-        latitude: event.nativeEvent.coordinate.latitude,
-        longitude: event.nativeEvent.coordinate.longitude
-      }
-    ])
+    setNewMarker({
+      latitude: event.nativeEvent.coordinate.latitude,
+      longitude: event.nativeEvent.coordinate.longitude
+    })
   }
+
+  const onNewMarkerDrag = (latLng: LatLng) => {
+    setNewMarker(latLng)
+  }
+
+  const onAddEntryClick = () => {}
 
   return (
     <>
@@ -81,6 +88,13 @@ export const Map = () => {
           onLongPress(event)
         }}
       >
+        {newMarker && (
+          <NewEntryMarker
+            onAddClick={() => onAddEntryClick()}
+            onDrag={(latLng) => onNewMarkerDrag(latLng)}
+            marker={newMarker}
+          />
+        )}
         {markers.map((marker, index) => (
           <Marker
             key={index}
