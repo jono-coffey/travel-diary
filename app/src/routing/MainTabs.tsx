@@ -4,7 +4,7 @@ import { useTheme } from '@ui-kitten/components'
 
 import { DASHBOARD, MAP, MainTabsParamList, TRIPS } from './routes'
 import { Dashboard } from '../screens/Dashboard'
-import { Map } from '../screens/MapView'
+import { Map } from '../screens/MapView/MapView'
 import { Trips } from '../screens/Trips'
 
 const Tab = createBottomTabNavigator<MainTabsParamList>()

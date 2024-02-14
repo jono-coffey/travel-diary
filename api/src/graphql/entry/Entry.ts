@@ -1,5 +1,6 @@
 import {
   extendType,
+  floatArg,
   intArg,
   nonNull,
   nullable,
@@ -13,6 +14,8 @@ export const Entry = objectType({
     t.nonNull.int('id');
     t.nullable.string('description');
     t.nonNull.string('destination');
+    t.nonNull.float('latitude');
+    t.nonNull.float('longitude');
     t.field('createdBy', {
       type: 'User',
       resolve(parent, args, context) {
@@ -60,10 +63,12 @@ export const EntryCreateMutation = extendType({
       args: {
         description: nullable(stringArg()),
         destination: nonNull(stringArg()),
+        latitude: nonNull(floatArg()),
+        longitude: nonNull(floatArg()),
         tripId: nullable(intArg()),
       },
       resolve(parent, args, context) {
-        const { description, destination, tripId } = args;
+        const { description, destination, tripId, latitude, longitude } = args;
         const { userId } = context;
 
         if (!userId) {
@@ -73,6 +78,8 @@ export const EntryCreateMutation = extendType({
         let entry = {
           description: description || null,
           destination,
+          latitude,
+          longitude,
           createdBy: { connect: { id: userId } },
         };
 
@@ -98,10 +105,13 @@ export const EntryUpdateMutation = extendType({
         id: nonNull(intArg()),
         description: nullable(stringArg()),
         destination: nullable(stringArg()),
+        latitude: nullable(floatArg()),
+        longitude: nullable(floatArg()),
         tripId: nullable(intArg()),
       },
       resolve(parent, args, context) {
-        const { id, description, destination, tripId } = args;
+        const { id, description, destination, tripId, latitude, longitude } =
+          args;
         const { userId } = context;
 
         if (!userId) {
@@ -120,6 +130,20 @@ export const EntryUpdateMutation = extendType({
           updatedEntry = {
             ...updatedEntry,
             destination,
+          };
+        }
+
+        if (latitude) {
+          updatedEntry = {
+            ...updatedEntry,
+            latitude,
+          };
+        }
+
+        if (longitude) {
+          updatedEntry = {
+            ...updatedEntry,
+            longitude,
           };
         }
 

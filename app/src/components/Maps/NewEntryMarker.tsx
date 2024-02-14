@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { Callout, LatLng, MapMarker, Marker } from 'react-native-maps'
 
-import { MapMarkerType } from '../../screens/MapView'
+import { MapMarkerType } from '../../screens/MapView/MapView'
 import { Button, ButtonType } from '../Buttons/Button'
 
 interface NewEntryMarkerProps {

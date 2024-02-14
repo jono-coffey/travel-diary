@@ -1,14 +1,16 @@
+import { useQuery } from '@apollo/client'
 import { useFocusEffect } from '@react-navigation/native'
 import { Spinner, StyleService, Text, useStyleSheet } from '@ui-kitten/components'
-import * as Location from 'expo-location'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import MapView, { LatLng, LongPressEvent, Marker, Region } from 'react-native-maps'
 
-import { NewEntryForm } from '../components/Forms/NewEntryForm/NewEntryForm'
-import { NewEntryMarker } from '../components/Maps/NewEntryMarker'
-import { ToastType, showToast } from '../utils/toasts'
-import { Modal } from '../components/Modal'
+import { getInitialLocationState } from './utils'
+import { gql } from '../../__generated__'
+import { NewEntryForm } from '../../components/Forms/NewEntryForm/NewEntryForm'
+import { NewEntryMarker } from '../../components/Maps/NewEntryMarker'
+import { Modal } from '../../components/Modal'
+import { ToastType, showToast } from '../../utils/toasts'
 
 export type MapMarkerType = {
   latitude: number
@@ -24,42 +26,40 @@ export const Map = () => {
   const [isLoadingLocation, setIsLoadingLocation] = useState(false)
   const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false)
 
+  const { error, data, refetch } = useQuery(GET_ENTRIES, {
+    notifyOnNetworkStatusChange: true
+  })
+
+  useEffect(() => {
+    if (data?.entries) {
+      console.log(data.entries)
+      setMarkers(
+        data.entries.map((entry) => {
+          return {
+            title: entry.destination,
+            latitude: entry.latitude,
+            longitude: entry.longitude
+          }
+        })
+      )
+    }
+
+    if (error) {
+      const errorText = 'Something went wrong fetching your trips.'
+      showToast({ text2: errorText }, ToastType.ERROR, 2)
+    }
+  }, [data])
+
   const styles = useStyleSheet(themedStyles)
 
   useFocusEffect(
     useCallback(() => {
       setNewMarker(undefined)
       if (!initialRegion) {
-        getInitialState()
+        getInitialLocationState(setIsLoadingLocation, setInitialRegion)
       }
     }, [])
   )
-
-  const getInitialState = async () => {
-    setIsLoadingLocation(true)
-    const defaultLocation = {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421
-    }
-
-    const { status } = await Location.requestForegroundPermissionsAsync()
-    if (status !== 'granted') {
-      setIsLoadingLocation(false)
-      setInitialRegion(defaultLocation)
-      return
-    }
-
-    const location = await Location.getCurrentPositionAsync({})
-    setIsLoadingLocation(false)
-    setInitialRegion({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421
-    })
-  }
 
   const onLongPress = (event: LongPressEvent) => {
     setNewMarker({
@@ -78,9 +78,10 @@ export const Map = () => {
   }
 
   const onAddEntrySuccess = () => {
-    // Refetch markers
     showToast({ text2: 'New journal entry has been created' }, ToastType.SUCCESS, 2)
     setIsAddEntryModalOpen(false)
+    refetch()
+    setNewMarker(undefined)
   }
 
   return (
@@ -91,7 +92,12 @@ export const Map = () => {
           setIsAddEntryModalOpen(false)
         }}
       >
-        <NewEntryForm onError={() => onAddEntryError()} onSuccess={() => onAddEntrySuccess()} />
+        <NewEntryForm
+          latitude={newMarker?.latitude}
+          longitude={newMarker?.longitude}
+          onError={() => onAddEntryError()}
+          onSuccess={() => onAddEntrySuccess()}
+        />
       </Modal>
 
       {isLoadingLocation && (
@@ -161,3 +167,14 @@ const themedStyles = StyleService.create({
     shadowOpacity: 0.11
   }
 })
+
+const GET_ENTRIES = gql(`
+  query GetEntries {
+    entries {
+      id
+      longitude
+      latitude
+      destination
+    }
+  }
+`)

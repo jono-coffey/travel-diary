@@ -27,6 +27,8 @@ model Entry {
   createdById   Int
   trip          Trip?      @relation(fields: [tripId], references: [id])
   tripId        Int?
+  latitude      Float
+  longitude     Float
 }
 
 model User {

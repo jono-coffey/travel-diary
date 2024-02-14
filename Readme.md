@@ -12,11 +12,16 @@
 TODO: 
 
 High:
-  - Show users entries as markers on map
-  - Add entries to trip within trip
   - Add cover photo to trip
   - Add photos to entries
   - Style trip cards
+  - View individual trips
+  - Add entries to trip within trip
+  - View individual entries
+  - Delete trips
+  - Delete Entries
+  - Edit trips
+  - Edit Entries
 Med
   - Keyboard avoiding view in a modal
   - Icons from figma template

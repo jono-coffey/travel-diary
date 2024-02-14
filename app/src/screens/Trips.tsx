@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import { MaterialIcons, FontAwesome, AntDesign } from '@expo/vector-icons'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Spinner, StyleService, Text, useStyleSheet, useTheme } from '@ui-kitten/components'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FlatList, Pressable, View } from 'react-native'
 
 import { gql } from '../__generated__'
@@ -13,7 +13,6 @@ import { Modal } from '../components/Modal'
 import { TripCard } from '../components/TripCard'
 import { MainTabsParamList } from '../routing/routes'
 import { ToastType, showToast } from '../utils/toasts'
-import { useFocusEffect } from '@react-navigation/native'
 
 export const Trips = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Trips'>) => {
   const styles = useStyleSheet(themedStyles)
@@ -31,7 +30,6 @@ export const Trips = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Trip
 
   useEffect(() => {
     if (data?.currentUser) {
-      console.log('Setting')
       setFullRefresh(false)
     }
   }, [data])
@@ -152,7 +150,7 @@ const themedStyles = StyleService.create({
 })
 
 const GET_TRIPS = gql(`
-  query GetCurrentTrips {
+  query GetCurrentUser {
     currentUser {
       id
       trips {

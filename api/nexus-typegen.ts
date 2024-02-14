@@ -36,6 +36,8 @@ export interface NexusGenObjects {
     description?: string | null; // String
     destination: string; // String!
     id: number; // Int!
+    latitude: number; // Float!
+    longitude: number; // Float!
   }
   Mutation: {};
   Query: {};
@@ -71,6 +73,8 @@ export interface NexusGenFieldTypes {
     description: string | null; // String
     destination: string; // String!
     id: number; // Int!
+    latitude: number; // Float!
+    longitude: number; // Float!
     trip: NexusGenRootTypes['Trip'] | null; // Trip
   }
   Mutation: { // field return type
@@ -112,6 +116,8 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     destination: 'String'
     id: 'Int'
+    latitude: 'Float'
+    longitude: 'Float'
     trip: 'Trip'
   }
   Mutation: { // field return type name
@@ -155,6 +161,8 @@ export interface NexusGenArgTypes {
     newEntry: { // args
       description?: string | null; // String
       destination: string; // String!
+      latitude: number; // Float!
+      longitude: number; // Float!
       tripId?: number | null; // Int
     }
     newTrip: { // args
@@ -170,6 +178,8 @@ export interface NexusGenArgTypes {
       description?: string | null; // String
       destination?: string | null; // String
       id: number; // Int!
+      latitude?: number | null; // Float
+      longitude?: number | null; // Float
       tripId?: number | null; // Int
     }
   }

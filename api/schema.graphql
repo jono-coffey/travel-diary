@@ -12,16 +12,18 @@ type Entry {
   description: String
   destination: String!
   id: Int!
+  latitude: Float!
+  longitude: Float!
   trip: Trip
 }
 
 type Mutation {
   deleteEntry(id: Int!): Entry
   login(email: String!, password: String!): AuthPayload!
-  newEntry(description: String, destination: String!, tripId: Int): Entry!
+  newEntry(description: String, destination: String!, latitude: Float!, longitude: Float!, tripId: Int): Entry!
   newTrip(endDate: Float!, name: String!, startDate: Float!): Trip!
   signUp(email: String!, password: String!): AuthPayload!
-  updateEntry(description: String, destination: String, id: Int!, tripId: Int): Entry
+  updateEntry(description: String, destination: String, id: Int!, latitude: Float, longitude: Float, tripId: Int): Entry
 }
 
 type Query {

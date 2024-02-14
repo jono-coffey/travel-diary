@@ -11,6 +11,8 @@ import { InputField } from '../../Inputs/InputField'
 import { DropdownItem, SearchableDropdownField } from '../../Inputs/SearchableDropdown'
 
 export type NewEntryFormProps = {
+  latitude: number | undefined
+  longitude: number | undefined
   onSuccess(): void
   onError(): void
 }
@@ -59,7 +61,16 @@ export const NewEntryForm = (props: NewEntryFormProps) => {
   }, [trips])
 
   const onCreateEntry = () => {
-    newEntryMutation({ variables: { description, destination, tripId: selectedTripId } }).catch(() => {})
+    if (props.latitude && props.longitude)
+      newEntryMutation({
+        variables: {
+          description,
+          destination,
+          tripId: selectedTripId,
+          latitude: props.latitude,
+          longitude: props.longitude
+        }
+      }).catch(() => {})
   }
 
   return (
