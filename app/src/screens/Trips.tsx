@@ -1,32 +1,43 @@
 import { useQuery } from '@apollo/client'
 import { MaterialIcons, FontAwesome, AntDesign } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Spinner, StyleService, Text, useStyleSheet, useTheme } from '@ui-kitten/components'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FlatList, Pressable, View } from 'react-native'
 
 import { gql } from '../__generated__'
 import { Background } from '../components/Background'
 import { Button, ButtonType } from '../components/Buttons/Button'
 import { NewTripForm } from '../components/Forms/NewTripForm/NewTripForm'
+import { Modal } from '../components/Modal'
 import { TripCard } from '../components/TripCard'
 import { MainTabsParamList } from '../routing/routes'
 import { ToastType, showToast } from '../utils/toasts'
-import { Modal } from '../components/Modal'
+import { useFocusEffect } from '@react-navigation/native'
 
 export const Trips = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Trips'>) => {
   const styles = useStyleSheet(themedStyles)
   const theme = useTheme()
 
-  const { loading, error, data, refetch } = useQuery(GET_TRIPS, { notifyOnNetworkStatusChange: true })
+  const { loading, error, data, refetch } = useQuery(GET_TRIPS, {
+    notifyOnNetworkStatusChange: true
+  })
   const [isAddTripModalOpen, setIsAddTripModalOpen] = useState(false)
+  const [fullRefresh, setFullRefresh] = useState(true)
 
   const onCardPress = (id: number) => {
     console.log(id)
   }
 
+  useEffect(() => {
+    if (data?.currentUser) {
+      console.log('Setting')
+      setFullRefresh(false)
+    }
+  }, [data])
+
   const onAddTripSuccess = () => {
+    setFullRefresh(true)
     showToast({ text2: 'New trip has been created' }, ToastType.SUCCESS, 2)
     setIsAddTripModalOpen(false)
     refetch()
@@ -36,8 +47,6 @@ export const Trips = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Trip
     const errorText = 'Something went wrong creating a new journal entry'
     showToast({ text2: errorText }, ToastType.ERROR, 2)
   }
-
-  console.log(loading)
 
   return (
     <>
@@ -49,7 +58,7 @@ export const Trips = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Trip
       >
         <NewTripForm onError={() => onAddTripError()} onSuccess={() => onAddTripSuccess()} />
       </Modal>
-      <Background style={{ paddingBottom: 0 }}>
+      <Background>
         <View style={styles.topContainer}>
           <Text category="h3">Trips</Text>
           <Pressable onPress={() => setIsAddTripModalOpen(true)}>
@@ -57,7 +66,7 @@ export const Trips = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Trip
           </Pressable>
         </View>
 
-        {loading ? (
+        {loading && fullRefresh ? (
           <View style={styles.centeredContainer}>
             <Spinner status="primary" />
           </View>
@@ -95,6 +104,8 @@ export const Trips = ({ route }: NativeStackScreenProps<MainTabsParamList, 'Trip
             )}
             numColumns={1}
             showsVerticalScrollIndicator={false}
+            onRefresh={() => refetch()}
+            refreshing={loading && !fullRefresh}
           />
         ) : (
           <View style={[styles.centeredContainer, styles.textContainer]}>
