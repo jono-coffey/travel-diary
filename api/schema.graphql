@@ -27,6 +27,7 @@ type Mutation {
 type Query {
   currentUser: User
   entries: [Entry!]!
+  trips: [Trip!]!
 }
 
 type Trip {

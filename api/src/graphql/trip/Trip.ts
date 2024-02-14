@@ -34,7 +34,7 @@ export const Trip = objectType({
   },
 });
 
-export const EntriesQuery = extendType({
+export const TripQuery = extendType({
   type: 'Query',
   definition(t) {
     t.nonNull.list.nonNull.field('trips', {

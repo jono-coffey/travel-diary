@@ -13,7 +13,7 @@ TODO:
 
 High:
   - Show users entries as markers on map
-  - Add entry with trip attached
+  - Add entries to trip within trip
   - Add cover photo to trip
   - Add photos to entries
   - Style trip cards

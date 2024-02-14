@@ -84,6 +84,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     currentUser: NexusGenRootTypes['User'] | null; // User
     entries: NexusGenRootTypes['Entry'][]; // [Entry!]!
+    trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
   }
   Trip: { // field return type
     createdBy: NexusGenRootTypes['User'] | null; // User
@@ -124,6 +125,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     currentUser: 'User'
     entries: 'Entry'
+    trips: 'Trip'
   }
   Trip: { // field return type name
     createdBy: 'User'

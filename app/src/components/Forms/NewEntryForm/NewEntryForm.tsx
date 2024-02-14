@@ -1,12 +1,14 @@
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
 import { AddEntryErrors, validateForm } from './validation'
+import { gql } from '../../../__generated__'
 import { CREATE_ENTRY_MUTATION } from '../../../graphql/mutations/entries.graphql'
 import { Button, ButtonType } from '../../Buttons/Button'
 import { InputField } from '../../Inputs/InputField'
+import { DropdownItem, SearchableDropdownField } from '../../Inputs/SearchableDropdown'
 
 export type NewEntryFormProps = {
   onSuccess(): void
@@ -18,22 +20,26 @@ export const NewEntryForm = (props: NewEntryFormProps) => {
 
   const [destination, setDestination] = useState('')
   const [description, setDescription] = useState('')
+  const [selectedTripId, setSelectedTripId] = useState<number | undefined>(undefined)
+  const [tripDropdownItems, setTripDropdownItems] = useState<DropdownItem[] | undefined>(undefined)
 
   const [validationErrors, setValidationErrors] = useState<AddEntryErrors>({})
   const [isFormValid, setIsFormValid] = useState(false)
 
-  const [newEntry, { data, loading, error }] = useMutation(CREATE_ENTRY_MUTATION)
+  const [newEntryMutation, { data: newEntry, loading: loadingEntry, error: errorEntry }] =
+    useMutation(CREATE_ENTRY_MUTATION)
+  const { data: trips } = useQuery(GET_TRIPS)
 
   useEffect(() => {
-    if (error) {
+    if (errorEntry) {
       props.onError()
       return
     }
 
-    if (data?.newEntry) {
+    if (newEntry?.newEntry) {
       props.onSuccess()
     }
-  }, [data, error])
+  }, [errorEntry, newEntry])
 
   useEffect(() => {
     const errors = validateForm(destination)
@@ -41,9 +47,19 @@ export const NewEntryForm = (props: NewEntryFormProps) => {
     setIsFormValid(Object.keys(errors).length === 0)
   }, [destination])
 
+  useEffect(() => {
+    setTripDropdownItems(
+      trips?.trips.map((trip) => {
+        return {
+          label: trip.name,
+          value: trip.id.toString()
+        } as DropdownItem
+      })
+    )
+  }, [trips])
+
   const onCreateEntry = () => {
-    //TODO: Add trip id
-    newEntry({ variables: { description, destination } }).catch(() => {})
+    newEntryMutation({ variables: { description, destination, tripId: selectedTripId } }).catch(() => {})
   }
 
   return (
@@ -58,12 +74,19 @@ export const NewEntryForm = (props: NewEntryFormProps) => {
           required
         />
         <InputField placeholder="Description" value={description} onChange={setDescription} />
+        <SearchableDropdownField
+          label="Add to trip"
+          items={tripDropdownItems || []}
+          setSelectedItems={(id) => setSelectedTripId(id)}
+          placeholder="Select your trip"
+          dropdownDirection="TOP"
+        />
         <Button
           type={ButtonType.PRIMARY}
           onButtonClick={() => onCreateEntry()}
           title="Create"
           disabled={!isFormValid}
-          isLoading={loading}
+          isLoading={loadingEntry}
         />
       </View>
     </>
@@ -79,3 +102,12 @@ const themedStyles = StyleService.create({
     gap: 16
   }
 })
+
+const GET_TRIPS = gql(`
+  query GetTrips{
+    trips {
+        id
+        name
+      }
+    }
+`)

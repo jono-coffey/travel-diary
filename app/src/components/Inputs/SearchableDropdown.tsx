@@ -1,36 +1,39 @@
 import { Entypo, AntDesign } from '@expo/vector-icons'
 import { StyleService, Text, useStyleSheet, useTheme } from '@ui-kitten/components'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
-import DropDownPicker, { DropDownDirectionType, ItemType, ValueType } from 'react-native-dropdown-picker'
+import DropDownPicker, { DropDownDirectionType } from 'react-native-dropdown-picker'
 
 import { fontFamily } from '../../styles/typography'
 
 export interface DropdownItem {
-  value: string
-  label: string
+  value: string | undefined
+  label: string | undefined
 }
 
 export type SearchableDropdownProps = {
   items: DropdownItem[]
   placeholder: string
-  selectedIndices: number[]
   label?: string
   dropdownDirection?: DropDownDirectionType
-  setSelectedItems(indices: number[]): void
+  setSelectedItems(indices: number): void
 }
 
 export const SearchableDropdownField = (props: SearchableDropdownProps) => {
   const styles = useStyleSheet(themedStyles)
   const theme = useTheme()
 
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState(props.selectedIndices.map(String))
   const [items, setItems] = useState(props.items)
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(null)
 
-  const onSelectItem = (values: ItemType<ValueType>[]): void => {
-    props.setSelectedItems(values.map((value) => parseInt((value as DropdownItem).value, 10)))
-  }
+  useEffect(() => {
+    setItems(props.items)
+  }, [props.items])
+
+  useEffect(() => {
+    if (value) props.setSelectedItems(parseInt(value, 10))
+  }, [value])
 
   return (
     <View>
@@ -42,10 +45,8 @@ export const SearchableDropdownField = (props: SearchableDropdownProps) => {
         setOpen={setOpen}
         setValue={setValue}
         setItems={setItems}
-        onSelectItem={(values) => onSelectItem(values)}
         placeholder={props.placeholder}
         searchable
-        multiple
         searchPlaceholder="Search..."
         mode="BADGE"
         badgeDotColors={[theme['color-primary-300']]}
