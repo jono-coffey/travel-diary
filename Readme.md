@@ -10,7 +10,14 @@
 
 
 TODO: 
+
+High:
   - Show users entries as markers on map
-  - Keyboard avoiding view in a modal
   - Add entry with trip attached
-  - Empty state and error screen for trips list
+  - Add cover photo to trip
+  - Add photos to entries
+  - Style trip cards
+Med
+  - Keyboard avoiding view in a modal
+  - Icons from figma template
+  - Fix input field appearing label

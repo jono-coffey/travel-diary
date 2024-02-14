@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native'
-import { Modal, Spinner, StyleService, Text, useStyleSheet } from '@ui-kitten/components'
+import { Spinner, StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import * as Location from 'expo-location'
 import { useCallback, useState } from 'react'
 import { View } from 'react-native'
@@ -8,6 +8,7 @@ import MapView, { LatLng, LongPressEvent, Marker, Region } from 'react-native-ma
 import { NewEntryForm } from '../components/Forms/NewEntryForm/NewEntryForm'
 import { NewEntryMarker } from '../components/Maps/NewEntryMarker'
 import { ToastType, showToast } from '../utils/toasts'
+import { Modal } from '../components/Modal'
 
 export type MapMarkerType = {
   latitude: number
@@ -77,6 +78,7 @@ export const Map = () => {
   }
 
   const onAddEntrySuccess = () => {
+    // Refetch markers
     showToast({ text2: 'New journal entry has been created' }, ToastType.SUCCESS, 2)
     setIsAddEntryModalOpen(false)
   }
@@ -84,16 +86,14 @@ export const Map = () => {
   return (
     <>
       <Modal
-        animationType="slide"
-        visible={isAddEntryModalOpen}
+        isModalOpen={isAddEntryModalOpen}
         onBackdropPress={() => {
           setIsAddEntryModalOpen(false)
         }}
-        style={styles.modalContainer}
-        hardwareAccelerated
       >
         <NewEntryForm onError={() => onAddEntryError()} onSuccess={() => onAddEntrySuccess()} />
       </Modal>
+
       {isLoadingLocation && (
         <View style={styles.loaderWrapper}>
           <Spinner status="primary" />
