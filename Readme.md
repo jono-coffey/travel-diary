@@ -8,21 +8,23 @@
 - APP: `npm run start:local`
 
 
-
 TODO: 
 
 High:
   - Add cover photo to trip
   - Add photos to entries
   - Style trip cards
-  - View individual trips
   - Add entries to trip within trip
   - View individual entries
-  - Delete trips
-  - Delete Entries
-  - Edit trips
   - Edit Entries
-Med
+  - View individual trips
+  - Delete trips
+  - Edit trips
+
+Med:
   - Keyboard avoiding view in a modal
   - Icons from figma template
-  - Fix input field appearing label
+  - Fix date/input field appearing label
+  
+Low: 
+  - Swipe to delete trip

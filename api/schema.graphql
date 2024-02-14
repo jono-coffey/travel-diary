@@ -19,6 +19,7 @@ type Entry {
 
 type Mutation {
   deleteEntry(id: Int!): Entry
+  deleteTrip(id: Int!): Trip
   login(email: String!, password: String!): AuthPayload!
   newEntry(description: String, destination: String!, latitude: Float!, longitude: Float!, tripId: Int): Entry!
   newTrip(endDate: Float!, name: String!, startDate: Float!): Trip!
@@ -29,6 +30,8 @@ type Mutation {
 type Query {
   currentUser: User
   entries: [Entry!]!
+  getEntry(id: Int!): Entry
+  getTrip(id: Int!): Trip
   trips: [Trip!]!
 }
 

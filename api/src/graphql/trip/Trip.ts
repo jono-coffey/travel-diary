@@ -54,6 +54,32 @@ export const TripQuery = extendType({
   },
 });
 
+export const GetTripQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.nullable.field('getTrip', {
+      type: 'Trip',
+      args: {
+        id: nonNull(intArg()),
+      },
+      resolve(parent, args, context, info) {
+        const { id } = args;
+        const { userId } = context;
+
+        if (!userId) {
+          throw new Error('User not logged in');
+        }
+
+        return context.prisma.trip.findUnique({
+          where: {
+            id: id,
+          },
+        });
+      },
+    });
+  },
+});
+
 export const TripCreateMutation = extendType({
   type: 'Mutation',
   definition(t) {
@@ -80,6 +106,32 @@ export const TripCreateMutation = extendType({
         };
 
         return context.prisma.trip.create({ data: trip });
+      },
+    });
+  },
+});
+
+export const TripDeleteMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nullable.field('deleteTrip', {
+      type: 'Trip',
+      args: {
+        id: nonNull(intArg()),
+      },
+      resolve(parent, args, context) {
+        const { id } = args;
+        const { userId } = context;
+
+        if (!userId) {
+          throw new Error('User not logged in');
+        }
+
+        return context.prisma.trip.delete({
+          where: {
+            id: id,
+          },
+        });
       },
     });
   },

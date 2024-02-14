@@ -4,6 +4,8 @@ import { ReactNode } from 'react'
 type ModalProps = {
   children: ReactNode
   isModalOpen: boolean
+  // %
+  width?: number
   onBackdropPress(): void
 }
 export const Modal = (props: ModalProps) => {
@@ -15,7 +17,7 @@ export const Modal = (props: ModalProps) => {
       onBackdropPress={() => {
         props.onBackdropPress()
       }}
-      style={styles.modalContainer}
+      style={[styles.modalContainer, { width: `${props.width || '95'}%` }]}
       hardwareAccelerated
     >
       {props.children}

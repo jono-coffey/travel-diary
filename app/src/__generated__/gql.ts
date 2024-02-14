@@ -18,8 +18,10 @@ const documents = {
     "\n  mutation SignUp($email: String!, $password: String!) {\n    signUp(email: $email, password: $password) {\n      token\n      user {\n        id\n      }\n    }\n  }\n": types.SignUpDocument,
     "\n  mutation NewEntry($description: String, $destination: String!, $tripId: Int, $latitude: Float!, $longitude: Float!){\n    newEntry(description: $description, destination: $destination, tripId: $tripId, latitude: $latitude, longitude:$longitude) {\n        id\n      }\n    }\n": types.NewEntryDocument,
     "\n  mutation NewTrip($name: String!, $startDate: Float!, $endDate: Float!){\n     newTrip(name: $name, startDate: $startDate, endDate: $endDate)  {\n        id\n        name\n        startDate\n        endDate\n      }\n    }\n": types.NewTripDocument,
+    "\n  mutation DeleteTrip($deleteTripId: Int!) {\n    deleteTrip(id: $deleteTripId) {\n      id\n    }\n  }\n": types.DeleteTripDocument,
     "\n  query GetEntries {\n    entries {\n      id\n      longitude\n      latitude\n      destination\n    }\n  }\n": types.GetEntriesDocument,
     "\n  query GetCurrentUser {\n    currentUser {\n      id\n      trips {\n        id\n        name\n        startDate\n        endDate\n      }\n    }\n  }\n": types.GetCurrentUserDocument,
+    "\n  query GetTrip($tripId: Int!) {\n    getTrip(id: $tripId) {\n      id\n      name\n      startDate\n      endDate\n    }\n  }\n": types.GetTripDocument,
 };
 
 /**
@@ -59,11 +61,19 @@ export function gql(source: "\n  mutation NewTrip($name: String!, $startDate: Fl
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  mutation DeleteTrip($deleteTripId: Int!) {\n    deleteTrip(id: $deleteTripId) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteTrip($deleteTripId: Int!) {\n    deleteTrip(id: $deleteTripId) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query GetEntries {\n    entries {\n      id\n      longitude\n      latitude\n      destination\n    }\n  }\n"): (typeof documents)["\n  query GetEntries {\n    entries {\n      id\n      longitude\n      latitude\n      destination\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetCurrentUser {\n    currentUser {\n      id\n      trips {\n        id\n        name\n        startDate\n        endDate\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetCurrentUser {\n    currentUser {\n      id\n      trips {\n        id\n        name\n        startDate\n        endDate\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetTrip($tripId: Int!) {\n    getTrip(id: $tripId) {\n      id\n      name\n      startDate\n      endDate\n    }\n  }\n"): (typeof documents)["\n  query GetTrip($tripId: Int!) {\n    getTrip(id: $tripId) {\n      id\n      name\n      startDate\n      endDate\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

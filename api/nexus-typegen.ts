@@ -79,6 +79,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     deleteEntry: NexusGenRootTypes['Entry'] | null; // Entry
+    deleteTrip: NexusGenRootTypes['Trip'] | null; // Trip
     login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     newEntry: NexusGenRootTypes['Entry']; // Entry!
     newTrip: NexusGenRootTypes['Trip']; // Trip!
@@ -88,6 +89,8 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     currentUser: NexusGenRootTypes['User'] | null; // User
     entries: NexusGenRootTypes['Entry'][]; // [Entry!]!
+    getEntry: NexusGenRootTypes['Entry'] | null; // Entry
+    getTrip: NexusGenRootTypes['Trip'] | null; // Trip
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
   }
   Trip: { // field return type
@@ -122,6 +125,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     deleteEntry: 'Entry'
+    deleteTrip: 'Trip'
     login: 'AuthPayload'
     newEntry: 'Entry'
     newTrip: 'Trip'
@@ -131,6 +135,8 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     currentUser: 'User'
     entries: 'Entry'
+    getEntry: 'Entry'
+    getTrip: 'Trip'
     trips: 'Trip'
   }
   Trip: { // field return type name
@@ -152,6 +158,9 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     deleteEntry: { // args
+      id: number; // Int!
+    }
+    deleteTrip: { // args
       id: number; // Int!
     }
     login: { // args
@@ -181,6 +190,14 @@ export interface NexusGenArgTypes {
       latitude?: number | null; // Float
       longitude?: number | null; // Float
       tripId?: number | null; // Int
+    }
+  }
+  Query: {
+    getEntry: { // args
+      id: number; // Int!
+    }
+    getTrip: { // args
+      id: number; // Int!
     }
   }
 }

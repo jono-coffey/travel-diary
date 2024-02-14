@@ -10,3 +10,11 @@ export const CREATE_TRIP_MUTATION = gql(`
       }
     }
 `)
+
+export const DELETE_TRIP_MUTATION = gql(`
+  mutation DeleteTrip($deleteTripId: Int!) {
+    deleteTrip(id: $deleteTripId) {
+      id
+    }
+  }
+`)

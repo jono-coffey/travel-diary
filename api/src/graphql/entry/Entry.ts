@@ -55,6 +55,32 @@ export const EntriesQuery = extendType({
   },
 });
 
+export const EntryQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.nullable.field('getEntry', {
+      type: 'Entry',
+      args: {
+        id: nonNull(intArg()),
+      },
+      resolve(parent, args, context, info) {
+        const { id } = args;
+        const { userId } = context;
+
+        if (!userId) {
+          throw new Error('User not logged in');
+        }
+
+        return context.prisma.entry.findUnique({
+          where: {
+            id: id,
+          },
+        });
+      },
+    });
+  },
+});
+
 export const EntryCreateMutation = extendType({
   type: 'Mutation',
   definition(t) {
